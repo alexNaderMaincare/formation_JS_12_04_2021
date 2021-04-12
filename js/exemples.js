@@ -15,7 +15,35 @@ function send() {
     console.log(document.getElementById('paragraphe').innerHTML);
     document.getElementById('paragraphe').style.textDecoration = 'underline';
     document.getElementById('paragraphe').style.textDecorationColor = 'blue';
+
+    console.log(informationA.info1);
+    console.log(informationA.info2);
+
+    console.log("le tableau possède " + tableau.length + " entrées");
+    console.log(tableau);
+    tableau.splice(1, 1, informationC);
+    console.log(tableau);
 }
+
+class Info {
+    constructor (param1, paramX) {
+        this.info1 = param1;
+        this.info2 = paramX;
+    }
+}
+
+let informationA = new Info("Jean", "Valjean");
+let informationB = new Info("Javier", "Pastore");
+
+let tableau = [informationA];
+tableau.push(informationB);
+
+let informationC = new Info("Zlatan", "Ibrahimovic");
+
+
+
+
+
 
 // Logs
 /*if (typeof(var3) == "boolean") {
