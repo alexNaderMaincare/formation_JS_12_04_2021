@@ -2,10 +2,11 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <link rel="icon" type "image/png" href="../images/iconeCRM.jpg">
+        <link href='../css/form.css' rel='stylesheet' type='text/css'>
         <title> CRM </title>
-        <link rel="icon" type "image/png" href="images/monImageCRM.jpg">
 
-        <style>
+        <!--<style>
             form {
             /* Uniquement centrer le formulaire sur la page */
             /*margin: 0 auto;*/
@@ -51,15 +52,11 @@
             /* Pour donner assez de place pour écrire du texte */
             height: 5em;
             }
-        </style>
+        </style>-->
     </head>
     <body>
-        <h1 align='center'> My CRM</h1>
-        <h2> Description: </h2>
-        <p> Cette Application permet de faire de la gestion de <b>commande</b> et de <b>client</b></p>
-        <img src="images/monImageCRM.jpg" width='33%'>
 
-        <h3> Ajouter un client:</h3>
+        <h2> Ajouter un client:</h2>
 
         <form name="form_client" action="" method="post">
             <div> 
@@ -87,13 +84,13 @@
             </div>
 
             <div>
-                <label for="status">Actif</label>
-                <input type="checkbox" id="status" name="status" checked>
+                <input id="status" type="checkbox" name="status" checked>
+                <label id="status-not-bold">Actif</label>
             </div>
 
-            <br></br>
-
             <a href="home.html">Home</a>
+
+            <button>Valider</button>
 
         </form>
 

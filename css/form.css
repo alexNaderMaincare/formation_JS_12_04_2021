@@ -1,0 +1,49 @@
+body {
+    background-color: #ECF0F1;
+}
+
+h1 {
+    color:grey;
+    text-align:center;
+}
+
+h2 {
+    margin-left: 10px;
+    text-decoration: underline; 
+}
+
+label {
+    font-weight: bold;
+}
+
+a {
+    color: green;
+}
+
+a:hover {
+    color: red;
+}
+
+input, select{
+    display:block;
+    margin-bottom: 15px;
+}
+
+button {
+    float:right;
+    background-color: orange;
+    cursor: pointer;
+}
+
+#status {
+    display: inline;
+}
+
+#status-not-bold {
+    display: inline;
+    font-weight: normal;
+}
+
+button:focus {
+    background-color: yellow;
+}

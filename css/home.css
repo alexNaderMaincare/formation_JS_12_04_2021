@@ -1,0 +1,40 @@
+body {
+    background-color: #ECF0F1;
+}
+
+h1 {
+    color:grey;
+    text-align:center;
+}
+
+h2 {
+    margin-left: 10px;
+    text-decoration: underline; 
+}
+
+p, table, img {
+    margin-left: 30px;
+}
+
+table, th, td {
+    border: 1px solid black;
+  }
+
+thead {
+    margin: 0 auto;
+}
+
+.tableTitle {
+    font-weight: bold;
+    text-align: center;
+}
+
+.paiement {
+    color: red;
+    text-align: right;
+}
+
+.paiement-not {
+    color:green;
+    text-align: right;
+}
