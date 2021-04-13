@@ -1,0 +1,46 @@
+{
+  "clients": [
+    {
+      "id": 1,
+      "name": "Jacquo",
+      "firstName": "Michel",
+      "age": 25,
+      "password": "michel001",
+      "civilite": "MR",
+      "statut": true
+    },
+    {
+      "id": 2,
+      "name": "Vivilo",
+      "firstName": "Eloise",
+      "age": 75,
+      "password": "azerty111",
+      "civilite": "MME",
+      "statut": false
+    },
+    {
+      "name": "Nader",
+      "firstName": "Alexandre",
+      "age": 15,
+      "password": "eeeee",
+      "status": "on",
+      "id": 3
+    }
+  ],
+  "commandes": [
+    {
+      "id": 1,
+      "numero": "CMD001",
+      "prix": 59.99,
+      "etat": 2,
+      "idClient": 1
+    },
+    {
+      "id": 2,
+      "numero": "CMD002",
+      "prix": 135.99,
+      "etat": 3,
+      "idClient": 1
+    }
+  ]
+}

@@ -1,4 +1,29 @@
 // Exemple
+$(document).ready(function() {
+    $("p").first().css("color", "blue");
+    $("p").last().css("color", "brown");
+
+    $("#getTest").click(function() {
+        $("p").last().css("color", "red");
+
+        // Implement request
+        $.ajax({
+            url: 'http://localhost:3000/clients',
+            type: 'GET',
+            dataType: 'json'
+        })
+
+        // Request success
+        .done(function(data){
+            console.log(data);
+            console.log("Success ! Data: " + JSON.stringify(data));
+            console.log(data['message']);
+            console.log(data['message']['bulldog'][2]);
+        })
+    })
+
+
+})
 
 // Variables
 let var1 = 12;
@@ -14,14 +39,7 @@ function send() {
     console.log(document.getElementById('paragraphe'));
     console.log(document.getElementById('paragraphe').innerHTML);
     document.getElementById('paragraphe').style.textDecoration = 'underline';
-    document.getElementById('paragraphe').style.textDecorationColor = 'blue';
-
-    console.log(informationA.info1);
-    console.log(informationA.info2);
-
-    console.log("le tableau possède " + tableau.length + " entrées");
-    console.log(tableau);
-    tableau.splice(1, 1, informationC);
+    document.getElementById('paragraphe').style.textDecorationColor = 'red';
     console.log(tableau);
 }
 
@@ -35,45 +53,9 @@ class Info {
 let informationA = new Info("Jean", "Valjean");
 let informationB = new Info("Javier", "Pastore");
 
-let tableau = [informationA];
+let tableau = [];
+tableau.push(informationA);
 tableau.push(informationB);
 
-let informationC = new Info("Zlatan", "Ibrahimovic");
-
-
-
-
-
-
-// Logs
-/*if (typeof(var3) == "boolean") {
-    console.log("Le résultat est " + result);
-}
-
-for(let i=0; i<3; i++) {
-    console.log("i equals => ", i);
-}
-
-
-// Appels de méthodes
-isPositive(result);
-isPositive("toto");
-isPositive(0);
-
-// Méthodes
-function isPositive(value) {
-    if (typeof(value) == "number") {
-        if (value > 0) {
-            console.log("Le résultat est positif");
-        }
-        else if (value < 0) {
-            console.log("Le résultat est négatif");
-        }
-        else {
-            console.log("Le résultat est nul");
-        }
-    }
-    else {
-        console.log("Le paramètre d'entrée n'est pas un nombre !!!");
-    }
-}*/
+let informationC = new Info("Pierrot", "Dorian");
+tableau.push(informationC);

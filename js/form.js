@@ -1,5 +1,6 @@
 class Client {
     constructor(name, firstName, age, password, civility, status) {
+        this.id;
         this.name = name;
         this.firstName = firstName;
         this.age = age;
@@ -9,29 +10,41 @@ class Client {
     }
 }
 
+function serializeClient(client) {
+    return JSON.stringify({
+        name: client.name,
+        firstName: client.firstName,
+        age: parseInt(client.age),
+        password: client.password,
+        civility: client.civilite,
+        status: client.status,
+    })
+}
+
 let clients = [new Client('Breton', 'Thierry', 5, 'abcd', 'Monsieur', true),
                new Client('Rolland', 'Jeannot', 15, 'abcd', 'Monsieur', true)];
 
-function displayClient() {
 
+
+function displayClient() {
     // Get values from HTML
     let name = document.getElementById('name').value;
     let firstName = document.getElementById('firstname').value;
     let age = document.getElementById('age').value;
     let password = document.getElementById('password').value;
     let civility = document.getElementById('civility').value;
-    let status = document.getElementById('status').value;
+    let status = document.getElementById('status').checked;
+
+    console.log(status);
 
     // By default, the label is in red
     document.getElementById('labelCreationClient').style.color = 'red';
 
     // Call method to check parameters
     checkParametersClient(name, firstName, age, password, civility, status);
-
 }
 
 function checkParametersClient(name, firstName, age, password, civility, status)  {
-
     // Create a client if conditions are good
     // name and firstname  char min
     // password not empty and 6 char max
@@ -55,7 +68,6 @@ function checkParametersClient(name, firstName, age, password, civility, status)
             // Create a client
             createClient(name, firstName, age, password, civility, status);
             
-
             // Update message and label 
             message = "Felicitations, l'ajout du client à fonctionné !";
             document.getElementById('labelCreationClient').innerHTML = message;
@@ -73,24 +85,36 @@ function checkParametersClient(name, firstName, age, password, civility, status)
             // Call method to get error parameters
             message = checkErrorParams(name, firstName, age, password);
     }
-
-    
     document.getElementById('labelCreationClient').innerHTML = message;
-
 }
 
 // Create a new client
-function createClient(nom, prenom, age, motDePasse, civ, status) {
-    client = new Client(nom, prenom, parseInt(age), motDePasse, civ, status);
-    console.log(client);
+function createClient(name, firstName, age, motDePasse, civ, status) {
+    let newClient = new Client(name, firstName, parseInt(age), motDePasse, civ, status);
+    clients.push(newClient);
 
-    clients.push(client);
+    /*clients.push(client);
     alert("Nouveau client " + nom + " " + prenom + ". Il y a " + clients.length + " clients enregistrés !");
 
     message = "Bonjour " + civ + " " + prenom + " " + nom
-    document.getElementById('labelCreationClient').style.color = 'green';
-}
+    document.getElementById('labelCreationClient').style.color = 'green';*/
 
+    // Implement request
+    $.ajax({
+        url: 'http://localhost:3000/clients',
+        type: 'POST',
+        dataType: 'JSON',
+        contentType: "application/json",
+        data: serializeClient(newClient),
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+    })
+
+}
 
 // Print client parameters in error
 function checkErrorParams(name, firstName, age, password) {
@@ -126,17 +150,22 @@ function checkErrorParams(name, firstName, age, password) {
 function searchClientInformation() {
     let information = document.getElementById('information').value;
     let name = document.getElementById('searchInfo').value;
-
-    console.log("Information souhaitée: " + information);
+    let message = "";
 
     document.getElementById('labelRechercheInfos').style.color = 'red';
 
     if (information == "average") {
         console.log("On souhaite connaître la moyenne d'âge !");
-        message = getAverageAge();
+        //message = getAverageAge();
+        getAverageAgeDb();
     } else if (information == "searchClient") {
         console.log("On souhaite rechercher un client!");
-        message = getClientInformation(name);
+        //message = getClientInformation(name);
+        getClientInformationDb(name);
+    } else if (information == "rechercheDb") {
+        console.log("On souhaite rechercher en database!");
+        searchInDatabase();
+
     }
 
     document.getElementById('labelRechercheInfos').innerHTML = message;
@@ -150,8 +179,8 @@ function getAverageAge() {
     if (clients.length > 0 ) {
         let averageAge = 0;
 
-        for (let i = 0; i < clients.length; i++) {
-            averageAge += clients[i].age;
+        for (i in clients) {
+            averageAge += parseInt(clients[i].age);
         }
 
         averageAge /=  clients.length;
@@ -176,9 +205,9 @@ function getClientInformation(name) {
     if (clients.length > 0 ) {
         let clientFound = false;
 
-        for (let i = 0; i < clients.length; i++) {
+        for (i in clients) {
             console.log("clients[i].name " + clients[i].name);
-            if (clients[i].name == name) {
+            if (clients[i].name.toUpperCase == name.toUpperCase) {
                 console.log("Client trouvé à l'index " + i);
                 clientFound = true;
                 message = "Client trouvé: " 
@@ -200,4 +229,106 @@ function getClientInformation(name) {
     }
 
     return message;
+}
+
+function searchInDatabase() {
+    // JQuery
+
+    let message = "";
+
+    // Implement request
+    $.ajax({
+        url: `http://localhost:3000/clients`,
+        type: 'GET',
+        dataType: 'JSON'
+    })
+
+    // Request success
+    .done(function(data){
+        message = "Les clients sont : <br>";
+
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        // Get info from db
+        for(client of data) {
+            message += "Nom: " + client.name + ", prenom: " + client.firstName + "<br>";
+        }
+
+        // Update HTML
+        $("#labelRechercheInfos").css("color","green");
+        $("#labelRechercheInfos").html(message);
+    })
+}
+
+// Calculates average age
+function getAverageAgeDb() {
+
+    let message = "";
+    let averageAge = 0;
+    // Implement request
+    $.ajax({
+        url: 'http://localhost:3000/clients',
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        if (data) {
+            // Get info from db
+            for(client of data) {
+                console.log("Age : " + client.age);
+                averageAge += parseInt(client.age);
+            }
+    
+            message = "Moyenne d'âge: " + averageAge/(data.length);
+        }
+        else {
+            message = "Aucune donnée en base !";
+        }
+
+        // Update HTML
+        $("#labelRechercheInfos").css("color","green");
+        $("#labelRechercheInfos").html(message);
+
+    })
+}
+
+// Search for a client that fits the name given
+function getClientInformationDb(name) {
+
+    let message = "";
+    let nameVar = name;
+    // Implement request
+    $.ajax({
+        url: `http://localhost:3000/clients?nom=${nameVar}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        if (data) {
+            console.log(data[0]['name']);
+            message = data[0]['civilite'] 
+                         + " " + data[0]['name'] 
+                         + " " + data[0]['firstName']
+                         + " (" + data[0]['age'] + " ans)";
+            $("#labelRechercheInfos").css("color","green");
+        }
+        else {
+            message = "Désolé, le client n'est pas répertorié";
+        }
+
+        $("#labelRechercheInfos").html(message);
+
+    })
+
 }
