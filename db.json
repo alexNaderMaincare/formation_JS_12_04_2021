@@ -1,46 +1,54 @@
 {
   "clients": [
     {
-      "id": 1,
-      "name": "Jacquo",
-      "firstName": "Michel",
+      "name": "Cleuziou",
+      "firstName": "Clemence",
       "age": 25,
-      "password": "michel001",
-      "civilite": "MR",
-      "statut": true
-    },
-    {
-      "id": 2,
-      "name": "Vivilo",
-      "firstName": "Eloise",
-      "age": 75,
-      "password": "azerty111",
-      "civilite": "MME",
-      "statut": false
+      "password": "eeeeee",
+      "civility": "Madame",
+      "status": true,
+      "id": 2
     },
     {
       "name": "Nader",
       "firstName": "Alexandre",
-      "age": 15,
-      "password": "eeeee",
-      "status": "on",
+      "age": 35,
+      "password": "mped",
+      "civility": "Monsieur",
+      "status": true,
       "id": 3
+    },
+    {
+      "name": "Garrec",
+      "firstName": "Anthony",
+      "age": 10,
+      "password": "eeee",
+      "civility": "Mademoiselle",
+      "status": true,
+      "id": 4
     }
   ],
   "commandes": [
     {
       "id": 1,
-      "numero": "CMD001",
-      "prix": 59.99,
-      "etat": 2,
-      "idClient": 1
+      "number": 1,
+      "price": 20,
+      "status": 1,
+      "clientId": "NaderAlexandre"
     },
     {
       "id": 2,
-      "numero": "CMD002",
-      "prix": 135.99,
-      "etat": 3,
-      "idClient": 1
+      "number": 2,
+      "price": 30,
+      "status": 2,
+      "clientId": "CleuziouClemence"
+    },
+    {
+      "id": 3,
+      "number": 3,
+      "price": 100,
+      "status": 3,
+      "clientId": "GarrecAnthony"
     }
   ]
 }

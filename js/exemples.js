@@ -59,3 +59,12 @@ tableau.push(informationB);
 
 let informationC = new Info("Pierrot", "Dorian");
 tableau.push(informationC);
+
+function send() {
+    let tabHtml = document.getElementById('testTab');
+    let row = tabHtml.insertRow(1);
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(0);
+    cell1.innerHTML = "toto";
+    cell2.innerHTML = "tata";
+}

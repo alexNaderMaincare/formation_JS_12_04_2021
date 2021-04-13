@@ -1,6 +1,6 @@
 class Client {
-    constructor(name, firstName, age, password, civility, status) {
-        this.id;
+    constructor(id, name, firstName, age, password, civility, status) {
+        this.id = id;
         this.name = name;
         this.firstName = firstName;
         this.age = age;
@@ -16,15 +16,12 @@ function serializeClient(client) {
         firstName: client.firstName,
         age: parseInt(client.age),
         password: client.password,
-        civility: client.civilite,
+        civility: client.civility,
         status: client.status,
     })
 }
 
-let clients = [new Client('Breton', 'Thierry', 5, 'abcd', 'Monsieur', true),
-               new Client('Rolland', 'Jeannot', 15, 'abcd', 'Monsieur', true)];
-
-
+let clients = [];
 
 function displayClient() {
     // Get values from HTML
@@ -34,8 +31,6 @@ function displayClient() {
     let password = document.getElementById('password').value;
     let civility = document.getElementById('civility').value;
     let status = document.getElementById('status').checked;
-
-    console.log(status);
 
     // By default, the label is in red
     document.getElementById('labelCreationClient').style.color = 'red';
@@ -52,13 +47,6 @@ function checkParametersClient(name, firstName, age, password, civility, status)
     let message;
     
     document.getElementById('labelCreationClient').style.color = 'red';
-
-    console.log("in checkParametresClient");
-    console.log("name.length: " + name.length);
-    console.log("firstname.length: " + firstName.length);
-    console.log("password.length: " + password.length);
-    console.log("age.length: " + age.length);
-    console.log("in checkParametresClient");
 
     if (    (name.length >= 5)
         &&  (firstName.length >= 5)
@@ -90,8 +78,9 @@ function checkParametersClient(name, firstName, age, password, civility, status)
 
 // Create a new client
 function createClient(name, firstName, age, motDePasse, civ, status) {
-    let newClient = new Client(name, firstName, parseInt(age), motDePasse, civ, status);
+    let newClient = new Client("", name, firstName, parseInt(age), motDePasse, civ, status);
     clients.push(newClient);
+    console.log(clients);
 
     /*clients.push(client);
     alert("Nouveau client " + nom + " " + prenom + ". Il y a " + clients.length + " clients enregistrés !");
@@ -144,6 +133,8 @@ function checkErrorParams(name, firstName, age, password) {
     return message;
 }
 
+
+
 // Search for client information
 // Average age
 // Name search
@@ -156,11 +147,9 @@ function searchClientInformation() {
 
     if (information == "average") {
         console.log("On souhaite connaître la moyenne d'âge !");
-        //message = getAverageAge();
         getAverageAgeDb();
     } else if (information == "searchClient") {
         console.log("On souhaite rechercher un client!");
-        //message = getClientInformation(name);
         getClientInformationDb(name);
     } else if (information == "rechercheDb") {
         console.log("On souhaite rechercher en database!");
@@ -170,6 +159,7 @@ function searchClientInformation() {
 
     document.getElementById('labelRechercheInfos').innerHTML = message;
 }
+
 
 // Calculates average age
 function getAverageAge() {
@@ -195,8 +185,9 @@ function getAverageAge() {
     return message;
 }
 
+
 // Search for a client that fits the name given
-function getClientInformation(name) {
+function getClientInformationDb(name) {
 
     let message;
 
@@ -298,14 +289,279 @@ function getAverageAgeDb() {
     })
 }
 
+
+
+/* CLIENT INFO */
 // Search for a client that fits the name given
 function getClientInformationDb(name) {
 
     let message = "";
     let nameVar = name;
+    console.log(name);
     // Implement request
     $.ajax({
-        url: `http://localhost:3000/clients?nom=${nameVar}`,
+        url: `http://localhost:3000/clients?name=${nameVar}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        if (data.length > 0) {
+            message = data[0]['civility'] 
+                         + " " + data[0]['name'] 
+                         + " " + data[0]['firstName']
+                         + " (" + data[0]['age'] + " ans)";
+            $("#labelRechercheInfos").css("color","green");
+        }
+        else {
+            message = "Désolé, le client n'est pas répertorié";
+        }
+
+        $("#labelRechercheInfos").html(message);
+
+    })
+
+}
+
+
+
+// Partie finale du mardi 
+// Exemple
+function getAllData() {
+    console.log("Enter loadDataFromDb");
+    requestsJQuery('GET', 'http://localhost:3000/clients', 1);
+    requestsJQuery('GET', 'http://localhost:3000/commandes', 2);
+}
+
+function requestsJQuery(type, url, idFunction, data) {
+    $.ajax({
+      url: url,
+      type: type,
+      dataType: 'JSON',
+      contentType: "application/json",
+      data: data
+    })
+    .done(function(data) {
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+      switch (idFunction) {
+        case 1:
+          addElementsInTabClients(data);
+          break
+        case 2:
+          addElementsInTabCommandes(data);
+          break;
+      }
+  
+  
+    })
+  }
+
+// Function ID 1
+function addElementsInTabClients(data) {
+    let identifieRowClient = 1;
+    let tabClient = document.getElementById('tableClients');
+      for (i in data) {
+        let row = tabClient.insertRow(identifieRowClient);
+        row.insertCell(0).innerHTML = data[i].name;
+        row.insertCell(1).innerHTML = data[i].firstName;
+        identifieRowClient++;
+      }
+  }
+  
+  // Function ID 2
+  function addElementsInTabCommandes(data) {
+    let identifieRow = 1;
+    let tabCommande = document.getElementById('tableCommandes');
+    for (i in data) {
+      let row = tabCommande.insertRow(identifieRow);
+      row.insertCell(1).innerHTML = data[i].number;
+      let cellStatus = row.insertCell(3);
+      updateStatus(cellStatus, data[i].status);
+      identifieRow++;
+    }
+  }
+
+  function updateStatus(cell, orderState) {
+    console.log("Order state: " + orderState);
+
+    cell.style.textAlign ="right";
+
+    if (orderState == 1) {
+        cell.innerHTML = "Payé";
+        cell.style.color = "green";
+    }
+    else if(orderState == 2) {
+        cell.innerHTML = "En attente de paiement";
+        cell.style.color = "orange";
+    }
+    else if(orderState == 3) {
+        cell.innerHTML = "Non payé";
+        cell.style.color = "red";
+    }
+    else {
+        cell.innerHTML = "Status inconnu";
+        cell.style.color = "black";
+    }
+}
+
+
+  /* AJOUT COMMANDE */ 
+class Order {
+    constructor(number, price, status, clientId) {
+        this.id;
+        this.number = number;
+        this.price = price;
+        this.status = status;
+        this.clientId = clientId;
+    }
+}
+
+function serializeOrder(order) {
+    return JSON.stringify({
+        id: parseInt(order.id),
+        number: parseInt(order.number),
+        price: parseFloat(order.price),
+        status: parseInt(order.status),
+        clientId: order.clientId,
+    })
+}
+
+let orders = [];
+
+function addOrder() {
+    let number = parseInt(document.getElementById('number').value);
+    let price = parseFloat(document.getElementById('price').value);
+    let clientId = document.getElementById('associatedClient').value;
+    let status = -1;
+
+    status = convertStatus();
+
+    console.log("Number: " + number 
+              + ", price: " + price 
+              + ", status: " + status 
+              + ", clientId: " + clientId);
+
+    if (   (number) 
+        && (price)
+        && (status != -1)
+        && (clientId) ) {
+            console.log("Order can be added");
+            let newOrder = new Order(number, price, status, clientId)
+            orders.push(newOrder);
+            console.log(orders);
+
+            sendOrderInfoToDb(newOrder);
+        }
+    else {
+        console.log("Order can not be added");
+    }
+}
+
+function convertStatus() {
+    let statusNb = -1;
+    let statusString = document.getElementById('status').value;
+
+
+    if (statusString == "paid") {
+        statusNb = 1;
+    }
+    else if (statusString == "waitingForPaiment") {
+        statusNb = 2;
+    }
+    else if (statusString == "notPaid") {
+        statusNb = 3;
+    }
+    else {
+        console.log("Status is unknown");
+    }
+
+    console.log("Converted status from " + statusString + " to " + statusNb);
+
+    return statusNb;
+}
+
+function sendOrderInfoToDb(order) {
+    console.log("Enter sendOrderInfoToDb()");
+
+    
+    // Implement request
+    $.ajax({
+        url: 'http://localhost:3000/commandes',
+        type: 'POST',
+        dataType: 'JSON',
+        contentType: "application/json",
+        data: serializeOrder(order),
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+    })
+}
+
+function getClientAndAddTableSelect() {
+    $.ajax({
+        url: `http://localhost:3000/clients`,
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        select = document.getElementById('associatedClient');
+
+        if (data) {
+            // Get info from db
+            for(client of data) {
+                var opt = document.createElement('option');
+                opt.value = client.name + client.firstName;
+                opt.innerHTML = client.name + " " + client.firstName;
+                select.appendChild(opt);
+            }
+        }
+    })
+}
+
+
+
+// Search for commande information
+function searchCommandeInformation() {
+    let information = document.getElementById('information').value;
+    let number = parseInt(document.getElementById('searchInfo').value);
+    let message = "";
+
+    document.getElementById('labelRechercheInfos').style.color = 'red';
+
+    if (information == "commandPriceAverage") {
+        console.log("On souhaite connaître le prix moyen !");
+        getAveragePriceDb();
+    } else if (information == "commandSearch") {
+        console.log("On souhaite rechercher une commande!");
+        getCommandInformationDb(number)
+    } else if (information == "commandList") {
+        console.log("On souhaite rechercher en database!");
+        getCommandList();
+    }
+
+    document.getElementById('labelRechercheInfos').innerHTML = message;
+}
+
+
+// Get average pride
+function getAveragePriceDb() {
+    let message = "";
+    let averagePrice= 0;
+    // Implement request
+    $.ajax({
+        url: 'http://localhost:3000/commandes',
         type: 'GET',
         dataType: 'json'
     })
@@ -316,15 +572,90 @@ function getClientInformationDb(name) {
         console.log("Success ! Data: " + JSON.stringify(data));
 
         if (data) {
-            console.log(data[0]['name']);
-            message = data[0]['civilite'] 
-                         + " " + data[0]['name'] 
-                         + " " + data[0]['firstName']
-                         + " (" + data[0]['age'] + " ans)";
+            // Get info from db
+            for(commandes of data) {
+                console.log("Age : " + commandes.price);
+                averagePrice += parseInt(commandes.price);
+            }
+    
+            message = "Moyenne de prix: " + averagePrice/(data.length);
+        }
+        else {
+            message = "Aucune donnée en base !";
+        }
+
+        // Update HTML
+        $("#labelRechercheInfos").css("color","green");
+        $("#labelRechercheInfos").html(message);
+    })
+}
+
+/* COMMAND INFO */
+// Search for a client that fits the name given
+function getCommandList() {
+
+    let message = "";
+    let nameVar = name;
+    // Implement request
+    $.ajax({
+        url: `http://localhost:3000/commandes`,
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    // Request success
+    .done(function(data){
+        message = "Les commandes sont : <br>";
+
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        // Get info from db
+        for(commande of data) {
+            message += "Id: " + commande.id 
+                    + ", Numéro: " + commande.number
+                    + ", Prix: " + commande.price
+                    + ", Status: " + commande.status
+                    + ", Client Id: " + commande.clientId + "<br>";
+        }
+
+        // Update HTML
+        $("#labelRechercheInfos").css("color","green");
+        $("#labelRechercheInfos").html(message);
+    })
+
+}
+
+/* COMMAND INFO */
+// Search for a command that fits the given name
+function getCommandInformationDb(number) {
+
+    let message = "";
+    let numberVar = number;
+    // Implement request
+    $.ajax({
+        url: `http://localhost:3000/commandes?number=${numberVar}`,
+        type: 'GET',
+        dataType: 'json'
+    })
+
+    // Request success
+    .done(function(data){
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        if (data) {
+            console.log(data[0]['number']);
+            message = "Id: " + data[0]['id'] 
+                         + ", numéro: " + data[0]['number'] 
+                         + ", prix: " + data[0]['price']
+                         + ", status: " + data[0]['status']
+                         + ", id client: " + data[0]['clientId'];
+
             $("#labelRechercheInfos").css("color","green");
         }
         else {
-            message = "Désolé, le client n'est pas répertorié";
+            message = "Désolé, la commande n'est pas répertoriée";
         }
 
         $("#labelRechercheInfos").html(message);

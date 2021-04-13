@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type "image/png" href="../images/iconeCRM.jpg">
+        <link href='../css/form.css' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
+        <script type="text/javascript" src="../js/form.js" defer></script>
+        <title> CRM </title>
+    </head>
+    <body onLoad="getClientAndAddTableSelect()">
+
+        <h2> Ajouter une commande:</h2>
+
+        <form name="form_commande" action="" method="post">
+            <div> 
+                <label for="number">Numéro</label>
+                <input type="number" id="number" name="number">
+            </div>
+
+            <div> 
+                <label for="price">Prix</label>
+                <input type="number" id="price" name="price">
+            </div>
+
+            <div>
+                <label for="status">Etat de la commande</label>
+                <select id="status" name="status">
+                    <option value="paid">Payé</option>
+                    <option value="waitingForPaiment">En attende de paiement</option>
+                    <option value="notPaid">Non payé</option>
+                </select>
+            </div>
+
+            <div> 
+                <label for="associatedClient">Client associé</label>
+                <select id="associatedClient" name="associatedClient"> </select>
+            </div>
+
+            <a href="home.html">Home</a>
+        </form>
+
+        <p id="labelCreationClient"></p>
+        <button onclick="addOrder()">Valider</button>
+
+        <h2> Informations clients:</h2>
+
+        <form name="form_info" method="post">
+            <label for="information">Information souhaitée</label>
+            <select id="information" name="information">
+                <option value="commandList">Liste des commandes</option>
+                <option value="commandSearch">Recherche de commandes</option>
+                <option value="commandPriceAverage">Moyenne de prix des commandes</option>
+            </select>
+        </form>
+
+        <div> 
+            <label for="searchLabel">Recherche:</label>
+            <input type="text" id="searchInfo" name="searchInfo">
+        </div>
+
+        <button onclick="searchCommandeInformation()">Valider</button>
+
+        <p id="labelRechercheInfos"></p>
+
+    </body>
+</html>

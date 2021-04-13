@@ -5,18 +5,32 @@
         <link rel="icon" type "image/png" href="../images/iconeCRM.jpg">
         <link href='../css/form.css' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
-        <script type="text/javascript" src="../js/exemples.js" defer></script>
+        <script type="text/javascript" src="../js/exemples.js"></script>
     </head>
 
-    <body>
+    <body onLoad="send()">
         <h1>Titre</h1>
         <h2> Sous titre</h2>
         <p id='paragraphe'> Ceci est un paragraphe</p>
         <p id='paragraphe'> Ceci est un paragraphe encore !</p>
 
+        <table border=1 id='testTab'>
+            <caption> Liste des clients</caption>
+            <theader>
+                <tr>
+                    <td class="tableTitle">Nom</td>
+                    <td class="tableTitle">Prénom</td>
+                </tr>
+            </theader>
+            <tbody>
+            </tbody>
+        </table>
+
         <button onclick="send()"> TEST </button>
 
         <button id="getTest"> Recup Data </button>
+
+        <button id="addTable"> Ajout tableau </button>
 
     </body>
 </html>
