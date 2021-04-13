@@ -1,10 +1,10 @@
 class Client {
-    constructor(nom, prenom, age, motDePasse, civilite, status) {
-        this.nom = nom;
-        this.prenom = prenom;
+    constructor(name, firstName, age, password, civility, status) {
+        this.name = name;
+        this.firstName = firstName;
         this.age = age;
-        this.motDePasse = motDePasse;
-        this.civilite = civilite;
+        this.password = password;
+        this.civility = civility;
         this.status = status;
     }
 }
@@ -15,46 +15,45 @@ let clients = [new Client('Breton', 'Thierry', 5, 'abcd', 'Monsieur', true),
 function displayClient() {
 
     // Get values from HTML
-    let nom = document.getElementById('name').value;
-    let prenom = document.getElementById('firstname').value;
+    let name = document.getElementById('name').value;
+    let firstName = document.getElementById('firstname').value;
     let age = document.getElementById('age').value;
-    let motDePasse = document.getElementById('password').value;
-    let civ = document.getElementById('civility').value;
+    let password = document.getElementById('password').value;
+    let civility = document.getElementById('civility').value;
     let status = document.getElementById('status').value;
 
     // By default, the label is in red
     document.getElementById('labelCreationClient').style.color = 'red';
 
     // Call method to check parameters
-    checkParametresClient(nom, prenom, age, motDePasse, civ, status);
+    checkParametersClient(name, firstName, age, password, civility, status);
 
 }
 
-function checkParametresClient(nom, prenom, age, motDePasse, civ, status)  {
+function checkParametersClient(name, firstName, age, password, civility, status)  {
 
     // Create a client if conditions are good
     // name and firstname  char min
     // password not empty and 6 char max
     // age is given
     let message;
-    let errorParam;
     
     document.getElementById('labelCreationClient').style.color = 'red';
 
     console.log("in checkParametresClient");
-    console.log("nom.length: " + nom.length);
-    console.log("prenom.length: " + prenom.length);
-    console.log("motDePassse.length: " + motDePasse.length);
+    console.log("name.length: " + name.length);
+    console.log("firstname.length: " + firstName.length);
+    console.log("password.length: " + password.length);
     console.log("age.length: " + age.length);
     console.log("in checkParametresClient");
 
-    if (    (nom.length >= 5)
-        &&  (prenom.length >= 5)
-        &&  (motDePasse.length > 0)  
-        &&  (motDePasse.length <= 6)
+    if (    (name.length >= 5)
+        &&  (firstName.length >= 5)
+        &&  (password.length > 0)  
+        &&  (password.length <= 6)
         &&  (age.length > 0) ){
             // Create a client
-            createClient(nom, prenom, age, motDePasse, civ, status);
+            createClient(name, firstName, age, password, civility, status);
             
 
             // Update message and label 
@@ -72,7 +71,7 @@ function checkParametresClient(nom, prenom, age, motDePasse, civ, status)  {
         }
     else {
             // Call method to get error parameters
-            message = checkErrorParams(nom, prenom, age, motDePasse);
+            message = checkErrorParams(name, firstName, age, password);
     }
 
     
@@ -94,21 +93,21 @@ function createClient(nom, prenom, age, motDePasse, civ, status) {
 
 
 // Print client parameters in error
-function checkErrorParams(nom, prenom, age, motDePasse) {
+function checkErrorParams(name, firstName, age, password) {
 
     let message = "Erreur sur les champs suivants: ";
 
-    if (nom.length < 5) {
+    if (name.length < 5) {
         console.log("Nom incorrect");
         message += " nom";
     }
 
-    if (prenom.length < 5) {
+    if (firstName.length < 5) {
         console.log("Prenom incorrect");
         message += ", prenom";
     }
 
-    if (motDePasse.length == 0 || motDePasse.length > 6) {
+    if (password.length == 0 || password.length > 6) {
         console.log("Mot de passe incorrect");
         message += ", mot de passe";
     }
@@ -154,7 +153,7 @@ function getAverageAge() {
         for (let i = 0; i < clients.length; i++) {
             averageAge += clients[i].age;
         }
-        
+
         averageAge /=  clients.length;
 
         message = "Moyenne age des clients = " + averageAge;
@@ -178,14 +177,14 @@ function getClientInformation(name) {
         let clientFound = false;
 
         for (let i = 0; i < clients.length; i++) {
-            console.log("clients[i].nom " + clients[i].nom);
-            if (clients[i].nom == name) {
+            console.log("clients[i].name " + clients[i].name);
+            if (clients[i].name == name) {
                 console.log("Client trouvé à l'index " + i);
                 clientFound = true;
                 message = "Client trouvé: " 
-                            + clients[i].civilite 
-                            + " " + clients[i].nom.toUpperCase()
-                            + " " + clients[i].prenom
+                            + clients[i].civility 
+                            + " " + clients[i].name.toUpperCase()
+                            + " " + clients[i].firstName
                             + " (" + clients[i].age + " ans)";
                 document.getElementById('labelRechercheInfos').style.color = 'green';
                 break;
