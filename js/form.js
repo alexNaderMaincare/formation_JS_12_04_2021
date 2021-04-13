@@ -9,7 +9,8 @@ class Client {
     }
 }
 
-let clients = [];
+let clients = [new Client('Breton', 'Thierry', 5, 'abcd', 'Monsieur', true),
+               new Client('Rolland', 'Jeannot', 15, 'abcd', 'Monsieur', true)];
 
 function displayClient() {
 
@@ -22,7 +23,7 @@ function displayClient() {
     let status = document.getElementById('status').value;
 
     // By default, the label is in red
-    document.getElementById('labelFinal').style.color = 'red';
+    document.getElementById('labelCreationClient').style.color = 'red';
 
     // Call method to check parameters
     checkParametresClient(nom, prenom, age, motDePasse, civ, status);
@@ -38,7 +39,7 @@ function checkParametresClient(nom, prenom, age, motDePasse, civ, status)  {
     let message;
     let errorParam;
     
-    document.getElementById('labelFinal').style.color = 'red';
+    document.getElementById('labelCreationClient').style.color = 'red';
 
     console.log("in checkParametresClient");
     console.log("nom.length: " + nom.length);
@@ -58,8 +59,8 @@ function checkParametresClient(nom, prenom, age, motDePasse, civ, status)  {
 
             // Update message and label 
             message = "Felicitations, l'ajout du client à fonctionné !";
-            document.getElementById('labelFinal').innerHTML = message;
-            document.getElementById('labelFinal').style.color = 'green';
+            document.getElementById('labelCreationClient').innerHTML = message;
+            document.getElementById('labelCreationClient').style.color = 'green';
 
             // Clear values    
             document.getElementById('name').value = "";
@@ -75,21 +76,24 @@ function checkParametresClient(nom, prenom, age, motDePasse, civ, status)  {
     }
 
     
-    document.getElementById('labelFinal').innerHTML = message;
+    document.getElementById('labelCreationClient').innerHTML = message;
 
 }
 
+// Create a new client
 function createClient(nom, prenom, age, motDePasse, civ, status) {
-    client = new Client(nom, prenom, age, motDePasse, civ, status);
+    client = new Client(nom, prenom, parseInt(age), motDePasse, civ, status);
     console.log(client);
 
     clients.push(client);
     alert("Nouveau client " + nom + " " + prenom + ". Il y a " + clients.length + " clients enregistrés !");
 
     message = "Bonjour " + civ + " " + prenom + " " + nom
-    document.getElementById('labelFinal').style.color = 'green';
+    document.getElementById('labelCreationClient').style.color = 'green';
 }
 
+
+// Print client parameters in error
 function checkErrorParams(nom, prenom, age, motDePasse) {
 
     let message = "Erreur sur les champs suivants: ";
@@ -112,6 +116,88 @@ function checkErrorParams(nom, prenom, age, motDePasse) {
     if (age.length == 0) {
         console.log("Age incorrect");
         message += ", age";
+    }
+
+    return message;
+}
+
+// Search for client information
+// Average age
+// Name search
+function searchClientInformation() {
+    let information = document.getElementById('information').value;
+    let name = document.getElementById('searchInfo').value;
+
+    console.log("Information souhaitée: " + information);
+
+    document.getElementById('labelRechercheInfos').style.color = 'red';
+
+    if (information == "average") {
+        console.log("On souhaite connaître la moyenne d'âge !");
+        message = getAverageAge();
+    } else if (information == "searchClient") {
+        console.log("On souhaite rechercher un client!");
+        message = getClientInformation(name);
+    }
+
+    document.getElementById('labelRechercheInfos').innerHTML = message;
+}
+
+// Calculates average age
+function getAverageAge() {
+
+    let message;
+    
+    if (clients.length > 0 ) {
+        let averageAge = 0;
+
+        for (let i = 0; i < clients.length; i++) {
+            averageAge += clients[i].age;
+        }
+        
+        averageAge /=  clients.length;
+
+        message = "Moyenne age des clients = " + averageAge;
+        document.getElementById('labelRechercheInfos').style.color = 'green';
+    } 
+    else {
+        message = "Aucun client n'est renseigné !";
+    }
+
+    return message;
+}
+
+// Search for a client that fits the name given
+function getClientInformation(name) {
+
+    let message;
+
+    console.log("On recherche un client du nom de " + name);
+
+    if (clients.length > 0 ) {
+        let clientFound = false;
+
+        for (let i = 0; i < clients.length; i++) {
+            console.log("clients[i].nom " + clients[i].nom);
+            if (clients[i].nom == name) {
+                console.log("Client trouvé à l'index " + i);
+                clientFound = true;
+                message = "Client trouvé: " 
+                            + clients[i].civilite 
+                            + " " + clients[i].nom.toUpperCase()
+                            + " " + clients[i].prenom
+                            + " (" + clients[i].age + " ans)";
+                document.getElementById('labelRechercheInfos').style.color = 'green';
+                break;
+            }
+        }
+
+        if (!clientFound) {
+            message = "Le client du nom de " +  name + " n'a pas été trouvé";
+        }
+    }
+    else {
+        message = "Aucun client n'est renseigné !";
     }
 
     return message;

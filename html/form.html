@@ -49,9 +49,28 @@
             <a href="home.html">Home</a>
         </form>
 
-        <p id="labelFinal"></p>
+        <p id="labelCreationClient"></p>
         
         <button onclick="displayClient()">Valider</button>
+
+        <h2> Informations clients:</h2>
+
+        <form name="form_info" method="post">
+            <label for="information">Information souhaitée</label>
+            <select id="information" name="information">
+                <option value="average">Moyenne âge</option>
+                <option value="searchClient">Recherche client</option>
+            </select>
+        </form>
+
+        <div> 
+            <label for="searchLabel">Recherche:</label>
+            <input type="text" id="searchInfo" name="searchInfo">
+        </div>
+
+        <button onclick="searchClientInformation()">Valider</button>
+
+        <p id="labelRechercheInfos"></p>
 
     </body>
 </html>
