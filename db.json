@@ -26,29 +26,24 @@
       "civility": "Mademoiselle",
       "status": true,
       "id": 4
+    },
+    {
+      "name": "Neymar",
+      "firstName": "Junior",
+      "age": 30,
+      "password": "psg",
+      "civility": "Monsieur",
+      "status": true,
+      "id": 5
     }
   ],
   "commandes": [
     {
-      "id": 1,
-      "number": 1,
-      "price": 20,
-      "status": 1,
-      "clientId": "NaderAlexandre"
-    },
-    {
       "id": 2,
-      "number": 2,
-      "price": 30,
-      "status": 2,
-      "clientId": "CleuziouClemence"
-    },
-    {
-      "id": 3,
       "number": 3,
-      "price": 100,
-      "status": 3,
-      "clientId": "GarrecAnthony"
+      "price": 123,
+      "status": 1,
+      "clientId": "Cleuziou Clemence"
     }
   ]
 }

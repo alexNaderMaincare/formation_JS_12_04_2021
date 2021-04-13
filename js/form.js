@@ -1,4 +1,4 @@
-class Client {
+/*class Client {
     constructor(id, name, firstName, age, password, civility, status) {
         this.id = id;
         this.name = name;
@@ -8,22 +8,25 @@ class Client {
         this.civility = civility;
         this.status = status;
     }
-}
+}*/
 
-function serializeClient(client) {
-    return JSON.stringify({
-        name: client.name,
-        firstName: client.firstName,
-        age: parseInt(client.age),
-        password: client.password,
-        civility: client.civility,
-        status: client.status,
-    })
-}
+// function serializeClient(client) {
+//     return JSON.stringify({
+//         name: client.name,
+//         firstName: client.firstName,
+//         age: parseInt(client.age),
+//         password: client.password,
+//         civility: client.civility,
+//         status: client.status,
+//     })
+// }
 
 let clients = [];
+let orders = [];
 
-function displayClient() {
+
+// Add a client if all necessary information is given
+function addClient() {
     // Get values from HTML
     let name = document.getElementById('name').value;
     let firstName = document.getElementById('firstname').value;
@@ -135,7 +138,8 @@ function checkErrorParams(name, firstName, age, password) {
 
 
 
-// Search for client information
+
+// Search for client information (in form.html)
 // Average age
 // Name search
 function searchClientInformation() {
@@ -147,113 +151,21 @@ function searchClientInformation() {
 
     if (information == "average") {
         console.log("On souhaite connaître la moyenne d'âge !");
-        getAverageAgeDb();
+        displayAverageAgeClients();
     } else if (information == "searchClient") {
         console.log("On souhaite rechercher un client!");
-        getClientInformationDb(name);
+        searchForClient(name);
     } else if (information == "rechercheDb") {
         console.log("On souhaite rechercher en database!");
-        searchInDatabase();
+        displayClients();
 
     }
 
     document.getElementById('labelRechercheInfos').innerHTML = message;
 }
 
-
-// Calculates average age
-function getAverageAge() {
-
-    let message;
-    
-    if (clients.length > 0 ) {
-        let averageAge = 0;
-
-        for (i in clients) {
-            averageAge += parseInt(clients[i].age);
-        }
-
-        averageAge /=  clients.length;
-
-        message = "Moyenne age des clients = " + averageAge;
-        document.getElementById('labelRechercheInfos').style.color = 'green';
-    } 
-    else {
-        message = "Aucun client n'est renseigné !";
-    }
-
-    return message;
-}
-
-
-// Search for a client that fits the name given
-function getClientInformationDb(name) {
-
-    let message;
-
-    console.log("On recherche un client du nom de " + name);
-
-    if (clients.length > 0 ) {
-        let clientFound = false;
-
-        for (i in clients) {
-            console.log("clients[i].name " + clients[i].name);
-            if (clients[i].name.toUpperCase == name.toUpperCase) {
-                console.log("Client trouvé à l'index " + i);
-                clientFound = true;
-                message = "Client trouvé: " 
-                            + clients[i].civility 
-                            + " " + clients[i].name.toUpperCase()
-                            + " " + clients[i].firstName
-                            + " (" + clients[i].age + " ans)";
-                document.getElementById('labelRechercheInfos').style.color = 'green';
-                break;
-            }
-        }
-
-        if (!clientFound) {
-            message = "Le client du nom de " +  name + " n'a pas été trouvé";
-        }
-    }
-    else {
-        message = "Aucun client n'est renseigné !";
-    }
-
-    return message;
-}
-
-function searchInDatabase() {
-    // JQuery
-
-    let message = "";
-
-    // Implement request
-    $.ajax({
-        url: `http://localhost:3000/clients`,
-        type: 'GET',
-        dataType: 'JSON'
-    })
-
-    // Request success
-    .done(function(data){
-        message = "Les clients sont : <br>";
-
-        console.log(data);
-        console.log("Success ! Data: " + JSON.stringify(data));
-
-        // Get info from db
-        for(client of data) {
-            message += "Nom: " + client.name + ", prenom: " + client.firstName + "<br>";
-        }
-
-        // Update HTML
-        $("#labelRechercheInfos").css("color","green");
-        $("#labelRechercheInfos").html(message);
-    })
-}
-
-// Calculates average age
-function getAverageAgeDb() {
+// Calculates average age (in form.html)
+function displayAverageAgeClients() {
 
     let message = "";
     let averageAge = 0;
@@ -289,11 +201,39 @@ function getAverageAgeDb() {
     })
 }
 
+// Display clients information (in form.html)
+function displayClients() {
+    // JQuery
 
+    let message = "";
 
-/* CLIENT INFO */
-// Search for a client that fits the name given
-function getClientInformationDb(name) {
+    // Implement request
+    $.ajax({
+        url: `http://localhost:3000/clients`,
+        type: 'GET',
+        dataType: 'JSON'
+    })
+
+    // Request success
+    .done(function(data){
+        message = "Les clients sont : <br>";
+
+        console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));
+
+        // Get info from db
+        for(client of data) {
+            message += "Nom: " + client.name + ", prenom: " + client.firstName + "<br>";
+        }
+
+        // Update HTML
+        $("#labelRechercheInfos").css("color","green");
+        $("#labelRechercheInfos").html(message);
+    })
+}
+
+// Search for a client in the DB with the name given (in form.html)
+function searchForClient(name) {
 
     let message = "";
     let nameVar = name;
@@ -330,7 +270,9 @@ function getClientInformationDb(name) {
 
 
 // Partie finale du mardi 
-// Exemple
+
+// Get clients and commands info from DB
+// commandes.html
 function getAllData() {
     console.log("Enter loadDataFromDb");
     requestsJQuery('GET', 'http://localhost:3000/clients', 1);
@@ -361,31 +303,42 @@ function requestsJQuery(type, url, idFunction, data) {
     })
   }
 
-// Function ID 1
+// Fill the clients table
+// commandes.html
 function addElementsInTabClients(data) {
     let identifieRowClient = 1;
-    let tabClient = document.getElementById('tableClients');
+    let tabClient = document.getElementById('tabClients');
       for (i in data) {
         let row = tabClient.insertRow(identifieRowClient);
-        row.insertCell(0).innerHTML = data[i].name;
-        row.insertCell(1).innerHTML = data[i].firstName;
+        let cell1 = row.insertCell(0);
+        cell1.innerHTML = data[i].id;
+        row.insertCell(1).innerHTML = data[i].name;
+        row.insertCell(2).innerHTML = data[i].firstName;
+        row.insertCell(3).innerHTML = data[i].age;
+        row.insertCell(4).innerHTML = data[i].civility;
+        row.insertCell(5).innerHTML = data[i].status;
         identifieRowClient++;
       }
   }
   
-  // Function ID 2
+  // Fill the commands table
+  // commandes.html
   function addElementsInTabCommandes(data) {
     let identifieRow = 1;
-    let tabCommande = document.getElementById('tableCommandes');
+    let tabCommande = document.getElementById('tabCommandes');
     for (i in data) {
       let row = tabCommande.insertRow(identifieRow);
+      row.insertCell(0).innerHTML = data[i].id;
       row.insertCell(1).innerHTML = data[i].number;
+      row.insertCell(2).innerHTML = data[i].price;
       let cellStatus = row.insertCell(3);
       updateStatus(cellStatus, data[i].status);
+      row.insertCell(4).innerHTML = data[i].clientId;
       identifieRow++;
     }
   }
 
+  // Transforms status from int to string (+ style)
   function updateStatus(cell, orderState) {
     console.log("Order state: " + orderState);
 
@@ -411,7 +364,7 @@ function addElementsInTabClients(data) {
 
 
   /* AJOUT COMMANDE */ 
-class Order {
+/*class Order {
     constructor(number, price, status, clientId) {
         this.id;
         this.number = number;
@@ -419,26 +372,28 @@ class Order {
         this.status = status;
         this.clientId = clientId;
     }
-}
+// }*/
 
-function serializeOrder(order) {
-    return JSON.stringify({
-        id: parseInt(order.id),
-        number: parseInt(order.number),
-        price: parseFloat(order.price),
-        status: parseInt(order.status),
-        clientId: order.clientId,
-    })
-}
+// function serializeOrder(order) {
+//     return JSON.stringify({
+//         id: parseInt(order.id),
+//         number: parseInt(order.number),
+//         price: parseFloat(order.price),
+//         status: parseInt(order.status),
+//         clientId: order.clientId,
+//     })
+// }
 
-let orders = [];
-
+// Add order in DB
 function addOrder() {
+
+    // Get infos from HTML
     let number = parseInt(document.getElementById('number').value);
     let price = parseFloat(document.getElementById('price').value);
     let clientId = document.getElementById('associatedClient').value;
     let status = -1;
 
+    // Convert status from string to int
     status = convertStatus();
 
     console.log("Number: " + number 
@@ -446,6 +401,7 @@ function addOrder() {
               + ", status: " + status 
               + ", clientId: " + clientId);
 
+    // Create order if requirements are met
     if (   (number) 
         && (price)
         && (status != -1)
@@ -456,12 +412,13 @@ function addOrder() {
             console.log(orders);
 
             sendOrderInfoToDb(newOrder);
-        }
+    }
     else {
         console.log("Order can not be added");
     }
 }
 
+// Convert status from string to int
 function convertStatus() {
     let statusNb = -1;
     let statusString = document.getElementById('status').value;
@@ -485,6 +442,7 @@ function convertStatus() {
     return statusNb;
 }
 
+// Send new order info to DB
 function sendOrderInfoToDb(order) {
     console.log("Enter sendOrderInfoToDb()");
 
@@ -505,6 +463,7 @@ function sendOrderInfoToDb(order) {
     })
 }
 
+// Update client Id with data from client DB
 function getClientAndAddTableSelect() {
     $.ajax({
         url: `http://localhost:3000/clients`,
@@ -522,15 +481,13 @@ function getClientAndAddTableSelect() {
             // Get info from db
             for(client of data) {
                 var opt = document.createElement('option');
-                opt.value = client.name + client.firstName;
+                opt.value = client.name + " " + client.firstName;
                 opt.innerHTML = client.name + " " + client.firstName;
                 select.appendChild(opt);
             }
         }
     })
 }
-
-
 
 // Search for commande information
 function searchCommandeInformation() {
@@ -541,14 +498,14 @@ function searchCommandeInformation() {
     document.getElementById('labelRechercheInfos').style.color = 'red';
 
     if (information == "commandPriceAverage") {
-        console.log("On souhaite connaître le prix moyen !");
-        getAveragePriceDb();
+        console.log("On souhaite connaître le prix moyen des commandes !");
+        displayAveragePrice();
     } else if (information == "commandSearch") {
-        console.log("On souhaite rechercher une commande!");
-        getCommandInformationDb(number)
+        console.log("On souhaite rechercher une commande avec le numéro: " + number + " !");
+        searchForCommand(number)
     } else if (information == "commandList") {
-        console.log("On souhaite rechercher en database!");
-        getCommandList();
+        console.log("On souhaite afficher la liste des commandes!");
+        displayCommandInformation();
     }
 
     document.getElementById('labelRechercheInfos').innerHTML = message;
@@ -556,7 +513,7 @@ function searchCommandeInformation() {
 
 
 // Get average pride
-function getAveragePriceDb() {
+function displayAveragePrice() {
     let message = "";
     let averagePrice= 0;
     // Implement request
@@ -592,10 +549,9 @@ function getAveragePriceDb() {
 
 /* COMMAND INFO */
 // Search for a client that fits the name given
-function getCommandList() {
+function displayCommandInformation() {
 
     let message = "";
-    let nameVar = name;
     // Implement request
     $.ajax({
         url: `http://localhost:3000/commandes`,
@@ -628,7 +584,7 @@ function getCommandList() {
 
 /* COMMAND INFO */
 // Search for a command that fits the given name
-function getCommandInformationDb(number) {
+function searchForCommand(number) {
 
     let message = "";
     let numberVar = number;
