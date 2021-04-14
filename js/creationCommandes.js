@@ -1,23 +1,3 @@
-class Order {
-    constructor(number, price, status, clientId) {
-        this.id;
-        this.number = number;
-        this.price = price;
-        this.status = status;
-        this.clientId = clientId;
-    }
-}
-
-function serializeOrder(order) {
-    return JSON.stringify({
-        id: parseInt(order.id),
-        number: parseInt(order.number),
-        price: parseFloat(order.price),
-        status: parseInt(order.status),
-        clientId: order.clientId,
-    })
-}
-
 let orders = [];
 
 function addOrder() {
@@ -25,6 +5,12 @@ function addOrder() {
     let price = parseFloat(document.getElementById('price').value);
     let clientId = document.getElementById('clientId').value;
     let status = -1;
+
+    let message = "TOTO";
+
+    console.log("ici");
+    document.getElementById('labelCreationCommande').style.color = "red";
+    document.getElementById('labelCreationCommande').innerHTML = message;
 
     status = convertStatus();
 
@@ -43,10 +29,16 @@ function addOrder() {
             console.log(orders);
 
             sendOrderInfoToDb(newOrder);
+
+            message = "Commande numéro " + number + " créée avec sucés !";
+            document.getElementById('labelCreationCommande').style.color = "green";
+            document.getElementById('labelCreationCommande').style.fontWeight = "bold";
         }
     else {
         console.log("Order can not be added");
+        message = "La commande ne peut pas être créée...";
     }
+
 }
 
 function convertStatus() {

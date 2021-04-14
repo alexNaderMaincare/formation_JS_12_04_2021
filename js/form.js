@@ -97,7 +97,7 @@ function createClient(name, firstName, age, motDePasse, civ, status) {
         type: 'POST',
         dataType: 'JSON',
         contentType: "application/json",
-        data: serializeClient(newClient),
+        data: newClient.serializeClient(),
     })
 
     // Request success
@@ -284,12 +284,12 @@ function requestsJQuery(type, url, idFunction, data) {
       url: url,
       type: type,
       dataType: 'JSON',
-      contentType: "application/json",
+      contentType: 'application/json',
       data: data
     })
     .done(function(data) {
-        console.log(data);
-        console.log("Success ! Data: " + JSON.stringify(data));
+        /*console.log(data);
+        console.log("Success ! Data: " + JSON.stringify(data));*/
       switch (idFunction) {
         case 1:
           addElementsInTabClients(data);
@@ -308,17 +308,26 @@ function requestsJQuery(type, url, idFunction, data) {
 function addElementsInTabClients(data) {
     let identifieRowClient = 1;
     let tabClient = document.getElementById('tabClients');
-      for (i in data) {
+
+    let client = new Client();
+
+    for (i in data) {
+
+        client = client.deserialize(data[i]);
+
         let row = tabClient.insertRow(identifieRowClient);
         let cell1 = row.insertCell(0);
-        cell1.innerHTML = data[i].id;
-        row.insertCell(1).innerHTML = data[i].name;
-        row.insertCell(2).innerHTML = data[i].firstName;
-        row.insertCell(3).innerHTML = data[i].age;
-        row.insertCell(4).innerHTML = data[i].civility;
-        row.insertCell(5).innerHTML = data[i].status;
+        cell1.innerHTML = client.id;
+        row.insertCell(1).innerHTML = client.name;
+        row.insertCell(2).innerHTML = client.firstName;
+
+        client.formatAge(row.insertCell(3));
+        client.formatCivility(row.insertCell(4));
+        client.formatStatus(row.insertCell(5))
+
+        //row.insertCell(5).innerHTML = data[i].status;
         identifieRowClient++;
-      }
+    }
   }
   
   // Fill the commands table
@@ -326,41 +335,27 @@ function addElementsInTabClients(data) {
   function addElementsInTabCommandes(data) {
     let identifieRow = 1;
     let tabCommande = document.getElementById('tabCommandes');
+
+    let order = new Order();
+
     for (i in data) {
-      let row = tabCommande.insertRow(identifieRow);
-      row.insertCell(0).innerHTML = data[i].id;
-      row.insertCell(1).innerHTML = data[i].number;
-      row.insertCell(2).innerHTML = data[i].price;
-      let cellStatus = row.insertCell(3);
-      updateStatus(cellStatus, data[i].status);
-      row.insertCell(4).innerHTML = data[i].clientId;
-      identifieRow++;
+
+        // Deserialize object
+        order = order.deserialize(data[i]);
+
+        let row = tabCommande.insertRow(identifieRow);
+        row.insertCell(0).innerHTML = order.id;
+        row.insertCell(1).innerHTML = order.number;
+        order.formatPrice(row.insertCell(2));
+        order.formatPriceTTC(row.insertCell(3));
+        order.updateStatus(row.insertCell(4));
+
+        // client.formatStatus(row.insertCell(3));
+
+        row.insertCell(5).innerHTML = order.clientId;
+        identifieRow++;
     }
   }
-
-  // Transforms status from int to string (+ style)
-  function updateStatus(cell, orderState) {
-    console.log("Order state: " + orderState);
-
-    cell.style.textAlign ="right";
-
-    if (orderState == 1) {
-        cell.innerHTML = "Payé";
-        cell.style.color = "green";
-    }
-    else if(orderState == 2) {
-        cell.innerHTML = "En attente de paiement";
-        cell.style.color = "orange";
-    }
-    else if(orderState == 3) {
-        cell.innerHTML = "Non payé";
-        cell.style.color = "red";
-    }
-    else {
-        cell.innerHTML = "Status inconnu";
-        cell.style.color = "black";
-    }
-}
 
 
   /* AJOUT COMMANDE */ 
@@ -396,6 +391,9 @@ function addOrder() {
     // Convert status from string to int
     status = convertStatus();
 
+    let message = "";
+    document.getElementById('labelCreationCommande').style.color = "red";
+
     console.log("Number: " + number 
               + ", price: " + price 
               + ", status: " + status 
@@ -412,10 +410,17 @@ function addOrder() {
             console.log(orders);
 
             sendOrderInfoToDb(newOrder);
+
+            message = "Commande numéro " + number + " créée avec sucés !";
+            document.getElementById('labelCreationCommande').style.color = "green";
+            document.getElementById('labelCreationCommande').style.fontWeight = "bold";
     }
     else {
         console.log("Order can not be added");
+        message = "La commande ne peut pas être créée...";
     }
+
+    document.getElementById('labelCreationCommande').innerHTML = message;
 }
 
 // Convert status from string to int
@@ -453,7 +458,7 @@ function sendOrderInfoToDb(order) {
         type: 'POST',
         dataType: 'JSON',
         contentType: "application/json",
-        data: serializeOrder(order),
+        data: order.serializeOrder(),
     })
 
     // Request success
