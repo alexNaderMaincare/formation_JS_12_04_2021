@@ -334,10 +334,15 @@ function addElementsInTabClients(data) {
         client = client.deserialize(data[i]);
 
         let row = tabClient.insertRow(identifieRowClient);
-        let cell1 = row.insertCell(0);
-        cell1.innerHTML = client.id;
-        row.insertCell(1).innerHTML = client.name;
-        row.insertCell(2).innerHTML = client.firstName;
+        cell = row.insertCell(0);
+        cell.innerHTML = client.id;
+        cell = row.insertCell(1);
+        cell.innerHTML = client.name;
+        cell.style.textAlign ="center";
+
+        cell = row.insertCell(2);
+        cell.innerHTML = client.firstName;
+        cell.style.textAlign ="center";
 
         client.formatAge(row.insertCell(3));
         client.formatCivility(row.insertCell(4));
@@ -659,6 +664,7 @@ function connection(data) {
 }
 
 function deconnection() {
+    console.log("in deconnection()");
     $("#title").html("CRM");
     localStorage.clear();
 }

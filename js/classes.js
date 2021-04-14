@@ -37,10 +37,12 @@ class Client {
     // Format age
     formatAge(cell) {
         cell.innerHTML = this.age +  " ans";
+        cell.style.textAlign ="center";
     }
 
     // Format civility
     formatCivility(cell) {
+        cell.style.textAlign ="center";
         if (this.civility == "Mr") {
             cell.innerHTML = "Monsieur";
         }
@@ -54,6 +56,7 @@ class Client {
     
     // Format status
     formatStatus(cell) {
+        cell.style.textAlign ="center";
         if (this.status == true) {
             cell.innerHTML = "Actif";
         }
