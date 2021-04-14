@@ -94,5 +94,25 @@
       "status": 1,
       "clientId": "Nader Alexandre"
     }
+  ],
+  "users": [
+    {
+      "id":1,
+      "username": "alex.nader",
+      "password": "aaaaa",
+      "role": "USER"
+    },
+    {
+      "id":1,
+      "username": "gana.gueye",
+      "password": "aaaaa",
+      "role": "ADMIN"
+    },
+    {
+      "id":1,
+      "username": "leon.thecat",
+      "password": "aaaaa",
+      "role": "NONE"
+    }
   ]
 }

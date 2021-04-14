@@ -129,3 +129,31 @@ class Order {
         }
     }
 }
+
+
+class User {
+    constructor(id, username, password, role) {
+        this.id       = id;
+        this.username = username;
+        this.password = password;
+        this.role     = role;
+    }    
+    
+    serialize() {
+        return JSON.stringify({
+            id: parseInt(this.id),
+            username: this.username,
+            password: this.password,
+            role: this.role
+        })
+    }
+
+    deserialize(obj) {
+        let x = JSON.parse(JSON.stringify(obj));
+
+        return new User(x['id'],
+                        x['username'],
+                        x['password'],
+                        x['role']);
+    }
+}

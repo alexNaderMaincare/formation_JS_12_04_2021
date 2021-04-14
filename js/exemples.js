@@ -68,3 +68,17 @@ function send() {
     cell1.innerHTML = "toto";
     cell2.innerHTML = "tata";
 }
+
+function goBack() {
+    window.history.back();
+}
+
+function tryCatch() {
+    try {
+        toto();
+        alert("bonjour !");
+    }
+    catch (err) {
+        alert(err);
+    }
+}

@@ -10,66 +10,55 @@
         <title> CRM </title>
     </head>
     <body onLoad="getAllData()">
-        <h1> My CRM</h1>
-        <h2> Description: </h2>
-        <p> Cette Application permet de faire de la gestion de <b>commande</b> et de <b>client</b></p>
-        <img src="../images/monImageCRM.jpg" width='33%'>
-    
-        <h2> Clients: </h2>
-
-        <table id="tabClients">
-            <caption> Liste des clients</caption>
-            <theader>
-                <tr>
-                    <td class="tableTitle">Nom</td>
-                    <td class="tableTitle">Prénom</td>
-                </tr>
-            </theader>
-            <tbody>
-                <tr>
-                    <td>Jean</td>
-                    <td>Dupont</td>
-                </tr>
-                <tr>
-                    <td>Sarah</td>
-                    <td>Abdram</td>
-                </tr>
-                <tr>
-                    <td>Rachel</td>
-                    <td>Taeck</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2> Commandes: </h2>    
+        <h1 id="title">CRM</h1>
         
-        <table id="tabCommandes">
-            <caption> Liste des commandes</caption>
-            <theader>
-                <tr>
-                    <td class="tableTitle">Numéro de commande</td>
-                    <td class="tableTitle">Etat</td>
-                </tr>
-            </theader>
-            <tbody>
-                <tr>
-                    <td>CMD01</td>
-                    <td class="paiement">Payé</td>
-                </tr>
-                <tr>
-                    <td>CMD02</td>
-                    <td class="paiement">Payé</td>
-                </tr>
-                <tr>
-                    <td>CMD03</td>
-                    <td class="etatCommande">Non Payé</td>
-                </tr>
-                <tr>
-                    <td>CMD04</td>
-                    <td class="paiement-not">En attente de paiement</td>
-                </tr>
-            </tbody>
-        </table>
+        <button onclick="deconnection()">Deconnexion</button>
+        
+        <button onclick="goBack()">Retour</button>
+
+        <h2> Description: </h2>
+
+        <span id="hiddenDiv">
+            <p> Cette Application permet de faire de la gestion de <b>commande</b> et de <b>client</b></p>
+            <img src="../images/monImageCRM.jpg" width='33%'>
+        
+            <h2> Clients: </h2>
+
+            <table id="tabClients">
+                <caption> Liste des clients</caption>
+                <theader>
+                    <tr>
+                        <td class="tableTitle">Id</td>
+                        <td class="tableTitle">Nom</td>
+                        <td class="tableTitle">Prénom</td>
+                        <td class="tableTitle">Age</td>
+                        <td class="tableTitle">Civilité</td>
+                        <td class="tableTitle">Status</td>
+                    </tr>
+                </theader>
+                <tbody>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2> Commandes: </h2>    
+            
+            <table id="tabCommandes">
+                <caption> Liste des commandes</caption>
+                <theader>
+                    <tr>
+                        <td class="tableTitle">Id</td>
+                        <td class="tableTitle">Numéro de commande</td>
+                        <td class="tableTitle">Prix</td>
+                        <td class="tableTitle">Prix TTC</td>
+                        <td class="tableTitle">Etat</td>
+                        <td class="tableTitle">Client</td>
+                    </tr>
+                </theader>
+                <tbody>
+                </tbody>
+            </table>
+        </span>
 
     </body>
 </html>

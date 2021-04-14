@@ -9,71 +9,76 @@
         <script type="text/javascript" src="../js/form.js"></script>
         <title> CRM </title>
     </head>
-    <body>
+    <body onLoad="initForm()">
 
-        <h2> Ajouter un client:</h2>
+        <span id="mySpan">
+            <span id="contentAddClient">
+                <h1 id="title">CRM</h1>
+                <h2> Ajouter un client:</h2>
 
-        <form name="form_client" action="" method="post">
-            <div> 
-                <label for="name">Nom</label>
-                <input type="text" id="name" name="name">
-            </div>
+                <form name="form_client" action="" method="post">
+                    <div> 
+                        <label for="name">Nom</label>
+                        <input type="text" id="name" name="name">
+                    </div>
 
-            <div> 
-                <label for="firstname">Prenom</label>
-                <input type="text" id="firstname" name="firstname">
-            </div>
+                    <div> 
+                        <label for="firstname">Prenom</label>
+                        <input type="text" id="firstname" name="firstname">
+                    </div>
 
-            <div> 
-                <label for="age">Age</label>
-                <input type="number" id="age" name="age">
-            </div>
+                    <div> 
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age">
+                    </div>
 
-            <div> 
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password">
-            </div>
+                    <div> 
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password">
+                    </div>
 
-            <div>
-                <label for="civility">Civilité</label>
-                <select id="civility" name="civility">
-                    <option value="Mr">Monsieur</option>
-                    <option value="Mme">Madame</option>
-                    <option value="Melle">Mademoiselle</option>
-                </select>
-            </div>
+                    <div>
+                        <label for="civility">Civilité</label>
+                        <select id="civility" name="civility">
+                            <option value="Mr">Monsieur</option>
+                            <option value="Mme">Madame</option>
+                            <option value="Melle">Mademoiselle</option>
+                        </select>
+                    </div>
 
-            <div>
-                <input id="status" type="checkbox" name="status" checked>
-                <label id="status-not-bold">Actif</label>
-            </div>
+                    <div>
+                        <input id="status" type="checkbox" name="status" checked>
+                        <label id="status-not-bold">Actif</label>
+                    </div>
 
-            <a href="home.html">Home</a>
-        </form>
+                    <a href="home.html">Home</a>
+                </form>
 
-        <p id="labelCreationClient"></p>
-        
-        <button onclick="addClient()">Valider</button>
+                <p id="labelCreationClient"></p>
+                
+                <button onclick="addClient()">Valider</button>
 
-        <h2> Informations clients:</h2>
+                <h2> Informations clients:</h2>
 
-        <form name="form_info" method="post">
-            <label for="information">Information souhaitée</label>
-            <select id="information" name="information">
-                <option value="average">Moyenne âge</option>
-                <option value="searchClient">Recherche client</option>
-                <option value="rechercheDb">Lister clients en base</option>
-            </select>
-        </form>
+                <form name="form_info" method="post">
+                    <label for="information">Information souhaitée</label>
+                    <select id="information" name="information">
+                        <option value="average">Moyenne âge</option>
+                        <option value="searchClient">Recherche client</option>
+                        <option value="rechercheDb">Lister clients en base</option>
+                    </select>
+                </form>
 
-        <div> 
-            <label for="searchLabel">Recherche:</label>
-            <input type="text" id="searchInfo" name="searchInfo">
-        </div>
+                <div> 
+                    <label for="searchLabel">Recherche:</label>
+                    <input type="text" id="searchInfo" name="searchInfo">
+                </div>
 
-        <button onclick="searchClientInformation()">Valider</button>
+                <button onclick="searchClientInformation()">Valider</button>
 
-        <p id="labelRechercheInfos"></p>
+                <p id="labelRechercheInfos"></p>
+            </span>
+        </span>
 
     </body>
 </html>

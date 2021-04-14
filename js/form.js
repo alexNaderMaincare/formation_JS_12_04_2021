@@ -1,26 +1,3 @@
-/*class Client {
-    constructor(id, name, firstName, age, password, civility, status) {
-        this.id = id;
-        this.name = name;
-        this.firstName = firstName;
-        this.age = age;
-        this.password = password;
-        this.civility = civility;
-        this.status = status;
-    }
-}*/
-
-// function serializeClient(client) {
-//     return JSON.stringify({
-//         name: client.name,
-//         firstName: client.firstName,
-//         age: parseInt(client.age),
-//         password: client.password,
-//         civility: client.civility,
-//         status: client.status,
-//     })
-// }
-
 let clients = [];
 let orders = [];
 
@@ -274,9 +251,47 @@ function searchForClient(name) {
 // Get clients and commands info from DB
 // commandes.html
 function getAllData() {
-    console.log("Enter loadDataFromDb");
+    console.log("Enter getAllData");
     requestsJQuery('GET', 'http://localhost:3000/clients', 1);
     requestsJQuery('GET', 'http://localhost:3000/commandes', 2);
+
+    getConnectedUserInfo();
+}
+
+function getConnectedUserInfo() {
+    let username = localStorage.getItem('connectedUser');
+    if (username != null) {
+        document.getElementById('title').innerHTML = "CRM: " + username + " is connected";
+    }
+
+    let role = localStorage.getItem('role');
+    console.log(role);
+
+    if (role == "ADMIN") {
+        if (document.getElementById('mySpan')) {
+            document.getElementById('mySpan').hidden = true;
+        }
+    }
+    else if (role == "USER") {
+        
+    }
+    else {
+
+    }
+}
+
+function initForm() {
+    console.log(localStorage.getItem('role'));
+    console.log(localStorage.getItem('connectedUser'));
+    if (!localStorage.getItem('connectedUser')) {
+        document.getElementById('mySpan').innerHTML = "Désole, vous n'avez pas les droits";
+    } 
+    else if  (localStorage.getItem('role') == 'USER') {
+        document.getElementById('contentAddClient').hidden = true;
+    }
+    else if  (localStorage.getItem('role') == 'ADMIN') {
+        document.getElementById('contentAddClient').hidden = false;
+    }
 }
 
 function requestsJQuery(type, url, idFunction, data) {
@@ -293,9 +308,12 @@ function requestsJQuery(type, url, idFunction, data) {
       switch (idFunction) {
         case 1:
           addElementsInTabClients(data);
-          break
+          break;
         case 2:
           addElementsInTabCommandes(data);
+          break;
+        case 3:
+          connection(data);
           break;
       }
   
@@ -330,9 +348,9 @@ function addElementsInTabClients(data) {
     }
   }
   
-  // Fill the commands table
-  // commandes.html
-  function addElementsInTabCommandes(data) {
+// Fill the commands table
+// commandes.html
+function addElementsInTabCommandes(data) {
     let identifieRow = 1;
     let tabCommande = document.getElementById('tabCommandes');
 
@@ -355,29 +373,7 @@ function addElementsInTabClients(data) {
         row.insertCell(5).innerHTML = order.clientId;
         identifieRow++;
     }
-  }
-
-
-  /* AJOUT COMMANDE */ 
-/*class Order {
-    constructor(number, price, status, clientId) {
-        this.id;
-        this.number = number;
-        this.price = price;
-        this.status = status;
-        this.clientId = clientId;
-    }
-// }*/
-
-// function serializeOrder(order) {
-//     return JSON.stringify({
-//         id: parseInt(order.id),
-//         number: parseInt(order.number),
-//         price: parseFloat(order.price),
-//         status: parseInt(order.status),
-//         clientId: order.clientId,
-//     })
-// }
+}
 
 // Add order in DB
 function addOrder() {
@@ -470,6 +466,9 @@ function sendOrderInfoToDb(order) {
 
 // Update client Id with data from client DB
 function getClientAndAddTableSelect() {
+    
+    getConnectedUserInfo();
+
     $.ajax({
         url: `http://localhost:3000/clients`,
         type: 'GET',
@@ -623,4 +622,48 @@ function searchForCommand(number) {
 
     })
 
+}
+
+function connect() {
+    let username = document.getElementById('username').value;
+    let password = document.getElementById('password').value;
+
+    if (   (username.length > 0)
+        && (password.length > 0) ) {
+            createUser(username, password);
+        }
+    else {
+        console.log("Can not create user !");
+    }
+}
+
+function createUser(username, password) {
+    console.log(username + password);
+
+    requestsJQuery('GET', `http://localhost:3000/users?username=${username}&password=${password}`, 3);
+}
+
+function connection(data) {
+    try  {
+        let user = new User();
+        user = user.deserialize(data[0]);
+        console.log(user.role);
+
+        localStorage.setItem('connectedUser', user.username);
+        localStorage.setItem('role', user.role);
+        window.location.replace("home.html");
+    }
+    catch (err) {
+        $("#resultConnection").html(err);
+    }
+}
+
+function deconnection() {
+    $("#title").html("CRM");
+    localStorage.clear();
+}
+
+function goBack() {
+    console.log("gobackkkk");
+    window.history.back();
 }
